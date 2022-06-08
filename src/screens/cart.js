@@ -109,7 +109,7 @@ class Cart extends Component {
       <NavBar
         withBorder
         title={`My Cart ${cartItems.length > 0 ? `(${cartItems.length})` : ''}`}
-        titleColor={Colors.primaryText}
+        titleColor="primaryText"
         iconLeft={
           route.params?.screenType === 'modal' ? 'chevron-left' : undefined
         }

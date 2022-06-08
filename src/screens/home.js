@@ -190,7 +190,7 @@ class Home extends Component {
     return (
       <NavBar
         title="Home"
-        titleColor={Colors.white}
+        titleColor="white"
         iconLeft="qr-code-scanner"
         iconColor={Colors.white}
         iconRight="account-balance-wallet"

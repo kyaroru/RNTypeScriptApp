@@ -1,10 +1,26 @@
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import React from 'react';
-import PropTypes from 'prop-types';
-import {Colors} from 'themes';
-import {normalize} from 'utils/size';
+import { View, StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
+import React, { FC } from 'react';
+import { Colors, ColorType } from 'themes';
+import { normalize } from 'utils/size';
 import Label from '../text/label';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { FontSize } from 'utils/types';
+
+interface RoundIconProps {
+  onPress?: () => void;
+  text?: string;
+  name: string;
+  size?: 'mini' | 'small' | 'medium' | 'big';
+  textSize?: FontSize;
+  textColor?: ColorType;
+  containerStyle?: string;
+  iconStyle?: StyleProp<ViewStyle>;
+  iconColor?: ColorType;
+  iconComponent?: any;
+}
+
+type ConditionalViewType = any; // Carol - not sure how to declare the dynamic type here
+type ConditionalIconType = any; // Carol - not sure how to declare the dynamic type here
 
 const sizes = {
   mini: {
@@ -25,7 +41,7 @@ const sizes = {
   },
 };
 
-const RoundIcon = ({
+const RoundIcon: FC<RoundIconProps> = ({
   onPress,
   text,
   name,
@@ -37,15 +53,16 @@ const RoundIcon = ({
   iconColor,
   iconComponent,
 }) => {
-  const ConditionalView = onPress ? TouchableOpacity : View;
-  const containerSize = sizes[size].container;
-  const iconSize = sizes[size].icon;
-  const Icon = iconComponent || MaterialIcons;
+  const ConditionalView: ConditionalViewType = onPress ? TouchableOpacity : View;
+  const containerSize: number = size ? sizes[size].container : sizes['medium'].container;
+  const iconSize: number = size ? sizes[size].icon : sizes['medium'].icon;
+  const Icon: ConditionalIconType = iconComponent || MaterialIcons;
+
 
   return (
     <ConditionalView
       onPress={onPress}
-      style={[styles.container, {width: containerSize}, containerStyle]}>
+      style={[styles.container, { width: containerSize }, containerStyle]}>
       <View
         style={[
           styles.icon,
@@ -59,7 +76,7 @@ const RoundIcon = ({
         ]}>
         <Icon name={name} size={iconSize} color={iconColor} />
       </View>
-      {text !== null && (
+      {typeof text !== 'undefined' && text !== null && (
         <Label
           style={styles.text}
           size={textSize}
@@ -85,42 +102,5 @@ const styles = StyleSheet.create({
     marginTop: normalize(5),
   },
 });
-
-RoundIcon.propTypes = {
-  elevation: PropTypes.number,
-  onPress: PropTypes.func,
-  data: PropTypes.object,
-  selected: PropTypes.bool,
-  name: PropTypes.string,
-  text: PropTypes.string,
-  textSize: PropTypes.oneOf([
-    'xxxl',
-    'xxl',
-    'xl',
-    'l',
-    'ml',
-    'm',
-    's',
-    'xs',
-    'xxs',
-  ]),
-  size: PropTypes.string,
-  containerStyle: PropTypes.any,
-  iconComponent: PropTypes.any,
-};
-
-RoundIcon.defaultProps = {
-  elevation: 5,
-  data: null,
-  onPress: null,
-  selected: false,
-  name: 'help',
-  text: null,
-  textSize: 'xs',
-  textColor: null,
-  size: 'medium',
-  containerStyle: null,
-  iconComponent: null,
-};
 
 export default RoundIcon;

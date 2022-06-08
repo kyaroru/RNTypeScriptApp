@@ -4,15 +4,42 @@ import {
   StyleSheet,
   Platform,
   TouchableOpacity,
+  StyleProp, TextStyle, ViewStyle, TextInputProps
 } from 'react-native';
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {Colors} from 'themes';
+import React, { Component, FC } from 'react';
+import { Colors } from 'themes';
 import Label from '../text/label';
-import {normalize} from 'utils/size';
+import { normalize } from 'utils/size';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-class TextInput extends Component {
+interface MyTextInputProps {
+  containerStyle?: StyleProp<ViewStyle>;
+  inputContainerStyle?: StyleProp<ViewStyle>;
+  inputStyle?: StyleProp<TextStyle>;
+  errorStyle?: StyleProp<ViewStyle>;
+  value?: string;
+  error?: string;
+  iconLeft?: string;
+  iconSize?: number;
+  iconLeftColor?: string;
+  iconColor?: string;
+  iconComponent?: any;
+  onChangeText?: () => void;
+  itemRight?: FC;
+  onPress?: () => void;
+  placeholder?: string;
+};
+
+const defaultProps: MyTextInputProps = {
+  value: undefined
+}
+
+type ConditionalViewType = any; // Carol - not sure how to declare the dynamic type here
+type ConditionalIconType = any; // Carol - not sure how to declare the dynamic type here
+
+class TextInput extends Component<MyTextInputProps & TextInputProps, any> {
+  public static defaultProps = defaultProps;
+
   render() {
     const {
       containerStyle,
@@ -29,10 +56,11 @@ class TextInput extends Component {
       onChangeText,
       itemRight,
       onPress,
+      placeholder,
       ...otherProps
     } = this.props;
-    const Icon = iconComponent || MaterialIcons;
-    const ConditionalView = onPress ? TouchableOpacity : View;
+    const ConditionalIcon: ConditionalIconType = iconComponent || MaterialIcons;
+    const ConditionalView: ConditionalViewType = onPress ? TouchableOpacity : View;
     return (
       <ConditionalView
         activeOpacity={0.6}
@@ -40,39 +68,38 @@ class TextInput extends Component {
         style={[styles.container, containerStyle]}>
         <View style={[styles.inputContainer, inputContainerStyle]}>
           {iconLeft && (
-            <View style={styles.iconLeft}>
-              <Icon
+            <View>
+              <ConditionalIcon
                 name={iconLeft || 'search'}
                 size={iconSize || normalize(25)}
                 color={iconLeftColor || iconColor}
               />
             </View>
           )}
-          {onPress ? (
+          {onPress && placeholder ? (
             <View
               style={[
                 styles.input,
-                {color: Colors.primaryText, justifyContent: 'center'},
                 inputStyle,
               ]}>
-              <Label text={otherProps.placeholder} color="inputPlaceholder" />
+              <Label text={placeholder} color="inputPlaceholder" />
             </View>
           ) : (
             <RNTextInput
               onChangeText={onChangeText}
               value={value}
-              style={[styles.input, {color: Colors.primaryText}, inputStyle]}
+              style={[styles.input, { color: Colors.primaryText }, inputStyle]}
               placeholderTextColor={Colors.inputPlaceholder}
               {...otherProps}
             />
           )}
-          {itemRight && itemRight}
+          {!!itemRight && itemRight}
         </View>
 
         {error && (
           <Label
             size="s"
-            color={'error'}
+            color={'icon1'}
             align={'left'}
             style={[errorStyle]}
             text={error}
@@ -96,6 +123,8 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+    color: Colors.primaryText,
+    justifyContent: 'center',
     ...Platform.select({
       android: {
         height: normalize(45),
@@ -110,17 +139,5 @@ const styles = StyleSheet.create({
     paddingTop: normalize(5),
   },
 });
-
-TextInput.propTypes = {
-  containerStyle: PropTypes.any,
-  inputStyle: PropTypes.any,
-  errorStyle: PropTypes.any,
-};
-
-TextInput.defaultProps = {
-  containerStyle: null,
-  inputStyle: null,
-  errorStyle: null,
-};
 
 export default TextInput;
