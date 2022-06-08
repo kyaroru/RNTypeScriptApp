@@ -1,13 +1,32 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {View, Text, StyleSheet} from 'react-native';
-import {Colors, Font} from 'themes';
+import React, { FC } from 'react';
+import { View, Text, StyleSheet, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import { Colors, Font, ColorType } from 'themes';
+import { FontSize } from 'utils/types';
 
 const DEFAULT_FONT_SIZE = 'm';
 const DEFAULT_FONT_VARIANT = 'regular';
 const DEFAULT_FONT_COLOR = 'primaryText';
 
-const Label = props => {
+interface LabelProps {
+  color?: ColorType;
+  size?: FontSize;
+  align?: 'left' | 'right' | 'center';
+  text: string;
+  style?: StyleProp<TextStyle>;
+  variant?: 'light' | 'regular' | 'bold';
+  containerStyle?: StyleProp<ViewStyle>;
+  flex?: boolean;
+  flexShrink?: boolean;
+}
+
+const defaultProps: LabelProps = {
+  color: DEFAULT_FONT_COLOR,
+  size: DEFAULT_FONT_SIZE,
+  variant: DEFAULT_FONT_VARIANT,
+  text: '',
+};
+
+const Label: FC<LabelProps> = props => {
   const {
     color,
     size,
@@ -29,9 +48,9 @@ const Label = props => {
       ]}>
       <Text
         style={[
-          {color: Colors[color]},
-          {...Font[size][variant]},
-          align && {textAlign: align},
+          color && { color: Colors[color] },
+          size && variant && { ...Font[size][variant] },
+          align && { textAlign: align },
           style,
         ]}
         {...otherProps}>
@@ -41,35 +60,7 @@ const Label = props => {
   );
 };
 
-Label.propTypes = {
-  text: PropTypes.string.isRequired,
-  color: PropTypes.string,
-  size: PropTypes.oneOf([
-    'xxxl',
-    'xxl',
-    'xl',
-    'l',
-    'ml',
-    'm',
-    's',
-    'xs',
-    'xxs',
-  ]),
-  variant: PropTypes.oneOf(['light', 'regular', 'bold']),
-  style: Text.propTypes.style,
-  align: PropTypes.string,
-  containerStyle: PropTypes.any,
-};
-
-Label.defaultProps = {
-  color: DEFAULT_FONT_COLOR,
-  size: DEFAULT_FONT_SIZE,
-  variant: DEFAULT_FONT_VARIANT,
-  style: null,
-  align: null,
-  containerStyle: null,
-  onPress: null,
-};
+Label.defaultProps = defaultProps;
 
 const styles = StyleSheet.create({
   container: {

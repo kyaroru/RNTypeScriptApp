@@ -41,6 +41,5 @@ const Colors = {
   icon18: '#4d4d4d',
 };
 
-export default {
-  ...Colors,
-};
+export type ColorType = keyof typeof Colors;
+export default Colors;
