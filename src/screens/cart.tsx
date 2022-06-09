@@ -156,8 +156,14 @@ class Cart extends Component<CartScreenProps, CartScreenState> {
 
   renderCartItems = () => {
     const sortedCartItems = this.props.cartItems.sort((a, b) => {
-      return (a.item.title > b.item.title) - (a.item.title < b.item.title);
+      const bStr = b.item.title;
+      const aStr = a.item.title;
+      if (aStr > bStr) {
+        return 1;
+      }
+      return -1;
     });
+
     return (
       <View style={{ flex: 1, backgroundColor: Colors.nearWhite }}>
         <ScrollView>
