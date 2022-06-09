@@ -78,7 +78,7 @@ class Button extends React.Component<ButtonProps, any> {
               styles.button,
               small && styles.smallButton,
               mini && styles.miniButton,
-              color && { backgroundColor: Colors[color] },
+              { backgroundColor: color ? Colors[color] : Colors.primary },
               style,
             ]}>
             {iconLeft && (
