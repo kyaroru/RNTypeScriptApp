@@ -90,7 +90,7 @@ storiesOf('Card', module)
           overflow: 'hidden',
         })}>
         <Image
-          style={{width: '100%', height: 200, roundedCorner: normalize(15)}}
+          style={{width: '100%', height: 200}}
           resizeMode="cover"
           source={object('Card1 - image', {
             uri: 'https://source.unsplash.com/1024x768/?bear',
@@ -99,6 +99,7 @@ storiesOf('Card', module)
         <Label
           text={text('Card1 - text', 'Card 1 with image')}
           align="center"
+          style={{padding: normalize(10)}}
         />
       </Card>
       <Space vertical={normalize(10)} />
@@ -108,7 +109,7 @@ storiesOf('Card', module)
           overflow: 'hidden',
         })}>
         <Image
-          style={{width: '100%', height: 200, roundedCorner: normalize(15)}}
+          style={{width: '100%', height: 200}}
           resizeMode="cover"
           source={object('Card2 - image', {
             uri: 'https://source.unsplash.com/1024x768/?deer',
@@ -117,6 +118,7 @@ storiesOf('Card', module)
         <Label
           text={text('Card2 - text', 'Card 2 with image')}
           align="center"
+          style={{padding: normalize(10)}}
         />
       </Card>
     </>

@@ -89,6 +89,7 @@ class TextInput extends Component<MyTextInputProps & TextInputProps, any> {
               onChangeText={onChangeText}
               value={value}
               style={[styles.input, { color: Colors.primaryText }, inputStyle]}
+              placeholder={placeholder}
               placeholderTextColor={Colors.inputPlaceholder}
               {...otherProps}
             />
