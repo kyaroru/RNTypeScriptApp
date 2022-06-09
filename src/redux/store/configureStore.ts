@@ -41,4 +41,6 @@ const configStore = onComplete => {
   return {persistor, store};
 };
 
+export type RootState = ReturnType<typeof store.getState>;
+
 export default configStore;

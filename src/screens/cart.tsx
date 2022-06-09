@@ -1,27 +1,60 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Colors} from 'themes';
-import {Label, NavBar, CartItem, Button, Space} from 'components';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Colors } from 'themes';
+import { Label, NavBar, CartItem, Button, Space } from 'components';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Selectors from 'selectors';
 import Actions from 'actions';
-import {alertWithTitle, confirmationWithTitle} from 'utils/alert';
+import { alertWithTitle, confirmationWithTitle } from 'utils/alert';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {normalize} from 'utils/size';
-import {getTotalPrice, formatCurrency} from 'utils/number';
-import {ScrollView} from 'react-native-gesture-handler';
+import { normalize } from 'utils/size';
+import { getTotalPrice, formatCurrency } from 'utils/number';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Rating } from 'utils/types';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { RootState } from 'src/redux/store/configureStore';
+
 
 const SHIPPING_FEES = 10;
 
-class Cart extends Component {
+interface Item {
+  category: string;
+  description: string;
+  id: number;
+  image: string;
+  price: number;
+  rating: Rating;
+  title: string;
+}
+
+interface CartItem {
+  id: string;
+  item: Item;
+  quantity: number;
+}
+
+interface CartScreenProps {
+  navigation: NavigationProp<any, any>;
+  route: RouteProp<any>;
+  cartItems: Array<CartItem>;
+  removeCartItem: (id: string) => void;
+  updateCartItem: (id: string, newItem: CartItem, oldItem: CartItem) => void;
+}
+
+interface CartScreenState {
+  selected: Array<string>;
+  isAllSelected: boolean;
+}
+
+class Cart extends Component<CartScreenProps, CartScreenState> {
   state = {
     selected: [],
     isAllSelected: false,
   };
 
   removeItem = () => {
-    const {selected} = this.state;
+    const { selected } = this.state;
     if (selected.length === 0) {
       alertWithTitle('Error', 'Please select item to remove');
     } else {
@@ -30,7 +63,7 @@ class Cart extends Component {
         'Are you sure you want to delete this item from cart?',
         () => {
           selected.map(id => {
-            this.onSelect({id});
+            this.onSelect(id);
             this.props.removeCartItem(id);
           });
         },
@@ -39,8 +72,8 @@ class Cart extends Component {
   };
 
   checkout = () => {
-    const {cartItems} = this.props;
-    const {selected} = this.state;
+    const { cartItems } = this.props;
+    const { selected } = this.state;
     if (selected.length === 0) {
       alertWithTitle('Error', 'Please select item!');
     } else {
@@ -60,15 +93,15 @@ class Cart extends Component {
 
   onAllPress = () => {
     if (this.state.selected.length === this.props.cartItems.length) {
-      this.setState({isAllSelected: false, selected: []});
+      this.setState({ isAllSelected: false, selected: [] });
     } else {
       const selectedIds = this.props.cartItems.map(x => x.id);
-      this.setState({isAllSelected: true, selected: selectedIds});
+      this.setState({ isAllSelected: true, selected: selectedIds });
     }
   };
 
-  onSelect = cartItem => {
-    const index = this.state.selected.findIndex(id => id === cartItem.id);
+  onSelect = (id: string) => {
+    const index = this.state.selected.findIndex(i => id === i);
     if (index >= 0) {
       const selectedIds = [...this.state.selected];
       selectedIds.splice(index, 1);
@@ -77,8 +110,8 @@ class Cart extends Component {
         selected: selectedIds,
       });
     } else {
-      const selectedIds = [...this.state.selected];
-      selectedIds.push(cartItem.id);
+      const selectedIds: Array<string> = [...this.state.selected];
+      selectedIds.push(id);
       this.setState({
         isAllSelected: selectedIds.length === this.props.cartItems.length,
         selected: selectedIds,
@@ -86,7 +119,7 @@ class Cart extends Component {
     }
   };
 
-  onAddPress = cartItem => {
+  onAddPress = (cartItem: CartItem) => {
     const newCartItem = {
       ...cartItem,
       quantity: cartItem.quantity + 1,
@@ -94,7 +127,7 @@ class Cart extends Component {
     this.props.updateCartItem(cartItem.id, newCartItem, cartItem);
   };
 
-  onMinusPress = cartItem => {
+  onMinusPress = (cartItem: CartItem) => {
     const newCartItem = {
       ...cartItem,
       quantity: cartItem.quantity - 1,
@@ -103,7 +136,7 @@ class Cart extends Component {
   };
 
   renderNavBar = () => {
-    const {cartItems, route, navigation} = this.props;
+    const { cartItems, route, navigation } = this.props;
 
     return (
       <NavBar
@@ -126,7 +159,7 @@ class Cart extends Component {
       return (a.item.title > b.item.title) - (a.item.title < b.item.title);
     });
     return (
-      <View style={{flex: 1, backgroundColor: Colors.nearWhite}}>
+      <View style={{ flex: 1, backgroundColor: Colors.nearWhite }}>
         <ScrollView>
           {sortedCartItems.map(x => (
             <CartItem
@@ -136,7 +169,7 @@ class Cart extends Component {
               quantity={x.quantity}
               onAddPress={() => this.onAddPress(x)}
               onMinusPress={() => this.onMinusPress(x)}
-              onSelect={() => this.onSelect(x)}
+              onSelect={() => this.onSelect(x.id)}
               selected={this.state.selected}
             />
           ))}
@@ -146,8 +179,8 @@ class Cart extends Component {
   };
 
   renderFooter = () => {
-    const {cartItems} = this.props;
-    const {isAllSelected, selected} = this.state;
+    const { cartItems } = this.props;
+    const { isAllSelected, selected } = this.state;
     const selectedItems = selected.map(id => {
       const found = cartItems.find(x => x.id === id);
       return found;
@@ -200,7 +233,7 @@ class Cart extends Component {
         </TouchableOpacity>
         <Label text="All" />
         <View
-          style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
+          style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
           <View
             style={{
               justifyContent: 'center',
@@ -241,7 +274,7 @@ class Cart extends Component {
             color="accent"
             text={`Check out (${this.state.selected.length})`}
             onPress={this.checkout}
-            containerStyle={{marginHorizontal: 0}}
+            containerStyle={{ marginHorizontal: 0 }}
           />
         </View>
         <Space horizontal={normalize(16)} />
@@ -250,9 +283,9 @@ class Cart extends Component {
   };
 
   renderEmpty = () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Label text="There are no items in the cart" color="secondaryText" />
         <Button
           text="Product Listing"
@@ -264,7 +297,7 @@ class Cart extends Component {
   };
 
   render() {
-    const {route, cartItems} = this.props;
+    const { route, cartItems } = this.props;
     return (
       <SafeAreaView
         style={styles.container}
@@ -287,9 +320,7 @@ const styles = StyleSheet.create({
   },
 });
 
-Cart.defaultProps = {};
-
-const mapStateToProps = store => ({
+const mapStateToProps = (store: RootState) => ({
   cartItems: Selectors.getCartItems(store),
 });
 

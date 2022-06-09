@@ -33,7 +33,7 @@ export const getRandomInt = (min = 1, max = 1000) => {
 
 export const getTotalPrice = data => {
   const total = data.reduce((total, cart) => {
-    const newTotal = total + (cart?.item?.price || 0 * (cart?.quantity || 1));
+    const newTotal = total + (cart?.item?.price || 0) * (cart?.quantity || 1);
     return newTotal;
   }, 0);
   return Math.round(total * 100) / 100;

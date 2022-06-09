@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Colors} from 'themes';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Colors } from 'themes';
 import {
   TextInput,
   NavBar,
@@ -12,19 +12,43 @@ import {
   ListItem,
   Label,
 } from 'components';
-import {ScrollView, View, StyleSheet} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {alertWithTitle} from 'utils/alert';
-import {SliderBox} from 'react-native-image-slider-box';
+import { ScrollView, View, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { alertWithTitle } from 'utils/alert';
+// import {SliderBox} from 'react-native-image-slider-box';
 import Selectors from 'selectors';
 import Actions from 'actions';
-import {getScreenWidth, normalize, getScreenHeight} from 'utils/size';
-import FastImage from 'react-native-fast-image';
+import { getScreenWidth, normalize, getScreenHeight } from 'utils/size';
+// import FastImage from 'react-native-fast-image';
 import MasonryList from '@react-native-seoul/masonry-list';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { DummyFeaturedItem, IconProps } from 'utils/types';
+import { RootState } from 'src/redux/store/configureStore';
 
 const dummyText = 'Due to time constraint, this is not implemented';
 
-class Home extends Component {
+interface HomeScreenProps {
+  navigation: NavigationProp<any, any>;
+  route: RouteProp<any>;
+  fetchProfile: () => void;
+  fetchCategories: () => void;
+  fetchProducts: (data?: any) => void;
+  categories: Array<any>;
+  isLoadingCategories: boolean;
+  products: Array<any>;
+  isLoadingProducts: boolean;
+}
+
+interface HomeScreenState {
+  selectedCategory: number;
+  images: Array<string>;
+  icons: Array<IconProps>
+  saleItems: Array<DummyFeaturedItem>
+  bestSellers: Array<DummyFeaturedItem>
+  width: number;
+}
+
+class Home extends Component<HomeScreenProps, HomeScreenState> {
   state = {
     selectedCategory: 0,
     images: [
@@ -34,8 +58,8 @@ class Home extends Component {
       'https://source.unsplash.com/1024x768/?tree',
     ],
     icons: [
-      {id: 1, icon: 'local-mall', label: 'Mall', color: Colors.icon1},
-      {id: 2, icon: 'trending-down', label: 'Low Price', color: Colors.icon2},
+      { id: 1, icon: 'local-mall', label: 'Mall', color: Colors.icon1 },
+      { id: 2, icon: 'trending-down', label: 'Low Price', color: Colors.icon2 },
       {
         id: 3,
         icon: 'local-restaurant',
@@ -84,7 +108,7 @@ class Home extends Component {
         label: 'Shipping',
         color: Colors.icon10,
       },
-      {id: 11, icon: 'cake', label: 'Rewards', color: Colors.icon11},
+      { id: 11, icon: 'cake', label: 'Rewards', color: Colors.icon11 },
       {
         id: 12,
         icon: 'local-grocery-store',
@@ -180,7 +204,7 @@ class Home extends Component {
     this.props.fetchProducts();
   }
 
-  onLayout = e => {
+  onLayout = (e: { nativeEvent: { layout: { width: any; }; }; }) => {
     this.setState({
       width: e.nativeEvent.layout.width,
     });
@@ -201,7 +225,7 @@ class Home extends Component {
   };
 
   renderSearch = () => {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     return (
       <TextInput
         iconLeft="search"
@@ -224,24 +248,24 @@ class Home extends Component {
   };
 
   renderCategories = () => {
-    const {categories, fetchProducts, isLoadingCategories} = this.props;
-    const {selectedCategory} = this.state;
+    const { categories, fetchProducts, isLoadingCategories } = this.props;
+    const { selectedCategory } = this.state;
     return (
       <CategoryPanel
         isLoading={isLoadingCategories}
         selected={selectedCategory}
         categories={['All', ...categories]}
         onCategorySelected={selectedCategory => {
-          this.setState({selectedCategory});
-          fetchProducts({category: categories[selectedCategory - 1]});
+          this.setState({ selectedCategory });
+          fetchProducts({ category: categories[selectedCategory - 1] });
         }}
       />
     );
   };
 
   renderContent = () => {
-    const {products, isLoadingProducts, navigation} = this.props;
-    const {selectedCategory, icons} = this.state;
+    const { products, isLoadingProducts, navigation } = this.props;
+    const { selectedCategory, icons } = this.state;
     return (
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* {selectedCategory === 0 && (
@@ -281,7 +305,7 @@ class Home extends Component {
           )}
           {selectedCategory === 0 && <Space vertical={normalize(20)} />}
           {isLoadingProducts && (
-            <View style={{flex: 1, height: getScreenHeight()}}>
+            <View style={{ flex: 1, height: getScreenHeight() }}>
               <Label text="Loading..." />
             </View>
           )}
@@ -295,11 +319,11 @@ class Home extends Component {
               keyExtractor={item => item.id}
               numColumns={2}
               showsVerticalScrollIndicator={false}
-              renderItem={({item, i}) => (
+              renderItem={({ item, i }) => (
                 <ListItem
                   item={item}
                   index={i}
-                  onPress={() => navigation.navigate('Product', {item})}
+                  onPress={() => navigation.navigate('Product', { item })}
                 />
               )}
               refreshing={false}
@@ -349,9 +373,7 @@ const styles = StyleSheet.create({
   },
 });
 
-Home.defaultProps = {};
-
-const mapStateToProps = store => ({
+const mapStateToProps = (store: RootState) => ({
   categories: Selectors.getCategories(store),
   products: Selectors.getProducts(store),
   isLoadingCategories: Selectors.isLoadingCategories(store),

@@ -25,7 +25,7 @@ interface MyTextInputProps {
   iconColor?: string;
   iconComponent?: any;
   onChangeText?: () => void;
-  itemRight?: FC;
+  itemRight?: Element;
   onPress?: () => void;
   placeholder?: string;
 };

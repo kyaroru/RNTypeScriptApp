@@ -11,8 +11,8 @@ export interface IconProps {
 export interface DummyFeaturedItem {
   id: number;
   image: string;
-  price: string;
-  originalPrice: string;
+  price?: string;
+  originalPrice?: string;
   rank?: string;
   sold?: string;
   category?: string;
@@ -22,4 +22,9 @@ export interface DummyCartItem {
   title: string;
   image: string;
   price: number;
+};
+
+export interface Rating {
+  rate?: number;
+  count?: number;
 };

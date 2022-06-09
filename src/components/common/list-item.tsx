@@ -8,13 +8,9 @@ import FastImage from 'react-native-fast-image';
 import { Colors } from 'themes';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Space from './space';
+import { Rating } from 'utils/types';
 
 const imageWidth: number = (getScreenWidth() - normalize(32) - normalize(15)) / 2;
-
-interface Rating {
-  rate?: number;
-  count?: number;
-};
 
 interface Item {
   image?: string;

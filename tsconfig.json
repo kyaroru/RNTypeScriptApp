@@ -49,6 +49,14 @@
       "utils*": [
         "src/utils",
         "src/utils*"
+      ],
+      "actions*": [
+        "src/redux/actions",
+        "src/redux/actions*"
+      ],
+      "selectors*": [
+        "src/redux/selectors",
+        "src/redux/selectors*"
       ]
     },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */

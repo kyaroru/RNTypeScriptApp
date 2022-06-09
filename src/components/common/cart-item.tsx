@@ -19,7 +19,7 @@ interface CartItemProps {
   onMinusPress?: () => void;
   selected: Array<number>;
   onSelect?: () => void;
-  id: number;
+  id: string;
   hideRadioButton?: boolean;
 }
 
