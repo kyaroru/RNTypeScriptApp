@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { View, Text, StyleSheet, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, StyleProp, TextStyle, ViewStyle, TextProps } from 'react-native';
 import { Colors, Font, ColorType } from 'themes';
 import { FontSize } from 'utils/types';
 
@@ -26,7 +26,7 @@ const defaultProps: LabelProps = {
   text: '',
 };
 
-const Label: FC<LabelProps> = props => {
+const Label: FC<LabelProps & TextProps> = props => {
   const {
     color,
     size,

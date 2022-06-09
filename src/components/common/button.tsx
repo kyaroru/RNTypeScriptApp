@@ -1,19 +1,35 @@
 import React from 'react';
-import {TouchableOpacity, View, Platform} from 'react-native';
-import PropTypes from 'prop-types';
-import {Colors} from 'themes';
-import {normalize, getScreenWidth} from 'utils/size';
+import { TouchableOpacity, View, Platform, StyleProp, ViewStyle, TextStyle, StyleSheet } from 'react-native';
+import { Colors, ColorType } from 'themes';
+import { normalize } from 'utils/size';
 import Label from '../text/label';
 
-class Button extends React.Component {
+interface ButtonProps {
+  isLoading?: boolean;
+  text: string;
+  textStyle?: StyleProp<TextStyle>;
+  onPress?: () => void;
+  iconLeft?: string;
+  iconLeftStyle?: StyleProp<ViewStyle>;
+  iconRight?: string;
+  iconRightStyle?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
+  disabled?: boolean;
+  small?: boolean;
+  mini?: boolean;
+  color: ColorType;
+}
+
+class Button extends React.Component<ButtonProps, any> {
   renderButtonContent = () => {
-    const {isLoading, text, textStyle} = this.props;
+    const { isLoading, text, textStyle } = this.props;
     if (isLoading) {
       return (
         <Label
           color="white"
           size="s"
-          style={[textStyle]}
+          style={textStyle}
           text="Loading..."
           align="center"
         />
@@ -24,7 +40,7 @@ class Button extends React.Component {
       <Label
         color="white"
         size="s"
-        style={[textStyle]}
+        style={textStyle}
         text={text}
         align="center"
       />
@@ -62,14 +78,14 @@ class Button extends React.Component {
               styles.button,
               small && styles.smallButton,
               mini && styles.miniButton,
-              color && {backgroundColor: Colors[color]},
+              color && { backgroundColor: Colors[color] },
               style,
             ]}>
             {iconLeft && (
               <View style={[styles.icon, iconLeftStyle]}>{iconLeft}</View>
             )}
             {text && (
-              <View style={styles.textContainer}>
+              <View style={[styles.textContainer]}>
                 {this.renderButtonContent()}
               </View>
             )}
@@ -83,7 +99,7 @@ class Button extends React.Component {
   }
 }
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     margin: normalize(10),
     borderRadius: normalize(20),
@@ -132,34 +148,6 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
   },
-};
-
-Button.propTypes = {
-  text: PropTypes.string,
-  onPress: PropTypes.func,
-  iconLeft: PropTypes.element,
-  iconLeftStyle: PropTypes.any,
-  iconRight: PropTypes.element,
-  iconRightStyle: PropTypes.any,
-  style: PropTypes.any,
-  textStyle: PropTypes.any,
-  disabled: PropTypes.bool,
-  isLoading: PropTypes.bool,
-  color: PropTypes.string,
-};
-
-Button.defaultProps = {
-  text: null,
-  onPress: () => null,
-  iconLeft: null,
-  iconLeftStyle: null,
-  iconRight: null,
-  iconRightStyle: null,
-  style: null,
-  textStyle: null,
-  disabled: false,
-  isLoading: false,
-  color: null,
-};
+});
 
 export default Button;

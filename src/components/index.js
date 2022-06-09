@@ -9,5 +9,4 @@ export {default as CategoryPanel} from './common/category-panel';
 export {default as RoundIcon} from './common/round-icon';
 export {default as IconModules} from './common/icon-modules';
 export {default as FeaturedItems} from './common/featured-items';
-
 export {default as TextInput} from './input/text';

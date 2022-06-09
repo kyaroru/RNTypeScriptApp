@@ -13,7 +13,7 @@ interface RoundIconProps {
   size?: 'mini' | 'small' | 'medium' | 'big';
   textSize?: FontSize;
   textColor?: ColorType;
-  containerStyle?: string;
+  containerStyle?: StyleProp<ViewStyle>;
   iconStyle?: StyleProp<ViewStyle>;
   iconColor?: ColorType;
   iconComponent?: any;

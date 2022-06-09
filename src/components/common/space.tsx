@@ -1,13 +1,12 @@
-import React, {FC} from 'react';
-import PropTypes from 'prop-types';
-import {View} from 'react-native';
-import {Colors} from 'themes';
-import {normalize} from 'utils/size';
+import React, { FC } from 'react';
+import { View } from 'react-native';
+import { Colors } from 'themes';
+import { normalize } from 'utils/size';
 
 interface SpaceProps {
   vertical?: number | string;
   horizontal?: number | string;
-  backgroundColor: string,
+  backgroundColor?: string,
 }
 
 const defaultProps: SpaceProps = {
@@ -16,8 +15,8 @@ const defaultProps: SpaceProps = {
   backgroundColor: Colors.transparent,
 }
 
-const Space : FC<SpaceProps> = props => {
-  let {vertical, horizontal, backgroundColor} = props;
+const Space: FC<SpaceProps> = props => {
+  let { vertical, horizontal, backgroundColor } = props;
   if (!vertical) {
     vertical = '100%';
   }

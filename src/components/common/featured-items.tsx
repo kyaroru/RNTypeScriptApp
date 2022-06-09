@@ -1,27 +1,38 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {View, Image, StyleSheet} from 'react-native';
-import {Colors} from 'themes';
-import {normalize, getScreenWidth} from 'utils/size';
+import React, { FC } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Colors } from 'themes';
+import { normalize, getScreenWidth } from 'utils/size';
 import Card from '../card';
 import Label from '../text/label';
 import Space from './space';
 import FastImage from 'react-native-fast-image';
+import { DummyFeaturedItem } from 'utils/types';
 
-const FeaturedItems = props => {
-  const {title, items, type, onPress} = props;
+interface FeaturedItemsProps {
+  title?: string;
+  items: Array<DummyFeaturedItem>;
+  type?: string;
+  onPress?: () => void;
+}
+
+const defaultProps: FeaturedItemsProps = {
+  items: [],
+};
+
+const FeaturedItems: FC<FeaturedItemsProps> = props => {
+  const { title, items, type, onPress } = props;
   const imageWidth = (getScreenWidth() - normalize(32) - normalize(40)) / 3;
   return (
     <Card style={styles.card} roundedCorner={normalize(15)} onPress={onPress}>
-      <View style={{marginHorizontal: normalize(10)}}>
-        <Label text={title} variant="bold" />
+      <View style={{ marginHorizontal: normalize(10) }}>
+        <Label text={title || '-'} variant="bold" />
       </View>
       <Space vertical={normalize(10)} />
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         {items.map(i => (
-          <View style={{marginLeft: normalize(10)}} key={i.id}>
+          <View style={{ marginLeft: normalize(10) }} key={i.id}>
             <FastImage
-              source={{uri: i.image}}
+              source={{ uri: i.image }}
               style={{
                 width: imageWidth,
                 height: imageWidth,
@@ -34,7 +45,7 @@ const FeaturedItems = props => {
                 <Label text={i.price} color="accent" variant="bold" />
                 <Label
                   text={i.originalPrice}
-                  style={{textDecorationLine: 'line-through'}}
+                  style={{ textDecorationLine: 'line-through' }}
                   size="s"
                   color="gray"
                 />
@@ -43,19 +54,19 @@ const FeaturedItems = props => {
             {type === 'ranking' && (
               <View>
                 <Label
-                  text={i.rank}
+                  text={i.rank || '-'}
                   color="icon6"
                   variant="bold"
                   size="ml"
                   align="center"
                 />
                 <Label
-                  text={i.sold}
+                  text={i.sold || '-'}
                   color="icon6"
                   variant="bold"
                   align="center"
                 />
-                <Label text={i.category} size="s" color="gray" align="center" />
+                <Label text={i.category || '-'} size="s" color="gray" align="center" />
               </View>
             )}
           </View>
@@ -72,12 +83,6 @@ const styles = StyleSheet.create({
   },
 });
 
-FeaturedItems.propTypes = {
-  icons: PropTypes.array,
-};
-
-FeaturedItems.defaultProps = {
-  icons: [],
-};
+FeaturedItems.defaultProps = defaultProps;
 
 export default FeaturedItems;

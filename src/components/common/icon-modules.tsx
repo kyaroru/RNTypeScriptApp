@@ -1,11 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {ScrollView, View} from 'react-native';
-import {normalize, getScreenWidth} from 'utils/size';
+import React, { FC } from 'react';
+import { ScrollView, View } from 'react-native';
+import { normalize, getScreenWidth } from 'utils/size';
 import RoundIcon from './round-icon';
+import { IconProps } from 'utils/types';
+import { ColorType } from 'themes';
 
-const IconModules = props => {
-  const {icons, onIconPress} = props;
+interface IconModulesProps {
+  icons: Array<IconProps>;
+  onIconPress?: (label: string) => void;
+}
+
+const defaultProps: IconModulesProps = {
+  icons: [],
+};
+
+const IconModules: FC<IconModulesProps> = props => {
+  const { icons, onIconPress } = props;
   return (
     <ScrollView
       horizontal
@@ -20,14 +30,19 @@ const IconModules = props => {
           flexDirection: 'row',
           flexWrap: 'wrap',
         }}>
-        {icons.map((i, index) => (
+        {icons.map((i) => (
           <RoundIcon
             key={i.label}
             name={i.icon}
             text={i.label}
             textColor="white"
-            iconColor={i.color}
-            onPress={() => onIconPress(i.label)}
+            textSize="xs"
+            iconColor={i.color as ColorType}
+            onPress={() => {
+              if (onIconPress) {
+                onIconPress(i.label);
+              }
+            }}
             containerStyle={{
               marginRight: normalize(16),
               marginBottom: normalize(16),
@@ -39,12 +54,6 @@ const IconModules = props => {
   );
 };
 
-IconModules.propTypes = {
-  icons: PropTypes.array,
-};
-
-IconModules.defaultProps = {
-  icons: [],
-};
+IconModules.defaultProps = defaultProps;
 
 export default IconModules;

@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { FC } from 'react';
 import PropTypes from 'prop-types';
-import {ScrollView, TouchableOpacity, View} from 'react-native';
-import {Colors} from 'themes';
-import {Label} from 'components';
-import {normalize} from 'utils/size';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { Colors } from 'themes';
+import { Label } from 'components';
+import { normalize } from 'utils/size';
 
-const CategoryPanel = props => {
-  const {categories, selected, onCategorySelected, isLoading} = props;
+interface CategoryPanelProps {
+  categories: Array<string>;
+  selected: number;
+  onCategorySelected?: (index: number) => void;
+  isLoading?: boolean;
+}
+
+const defaultProps: CategoryPanelProps = {
+  categories: [],
+  selected: 0
+};
+
+const CategoryPanel: FC<CategoryPanelProps> = props => {
+  const { categories, selected, onCategorySelected, isLoading } = props;
   return (
     <View>
       <ScrollView
@@ -29,7 +41,11 @@ const CategoryPanel = props => {
         ) : (
           categories.map((c, index) => (
             <TouchableOpacity
-              onPress={() => onCategorySelected(index)}
+              onPress={() => {
+                if (onCategorySelected) {
+                  onCategorySelected(index);
+                }
+              }}
               key={c}
               style={{
                 backgroundColor:
@@ -53,12 +69,6 @@ const CategoryPanel = props => {
   );
 };
 
-CategoryPanel.propTypes = {
-  categories: PropTypes.array,
-};
-
-CategoryPanel.defaultProps = {
-  categories: [],
-};
+CategoryPanel.defaultProps = defaultProps;
 
 export default CategoryPanel;

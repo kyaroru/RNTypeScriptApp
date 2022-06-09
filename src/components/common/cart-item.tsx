@@ -1,21 +1,31 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {View} from 'react-native';
-import {normalize, getScreenWidth} from 'utils/size';
-import {formatCurrency, getRandomInt} from 'utils/number';
+import React, { FC } from 'react';
+import { View } from 'react-native';
+import { normalize } from 'utils/size';
+import { formatCurrency } from 'utils/number';
 import Card from '../card';
 import Label from '../text/label';
 import FastImage from 'react-native-fast-image';
-import {Colors} from 'themes';
+import { Colors } from 'themes';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Space from './space';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { DummyCartItem } from 'utils/types';
 
-const imageWidth = normalize(100);
+const imageWidth: number = normalize(100);
 
-const CartItem = props => {
+interface CartItemProps {
+  item: DummyCartItem;
+  quantity: number;
+  onAddPress?: () => void;
+  onMinusPress?: () => void;
+  selected: Array<number>;
+  onSelect?: () => void;
+  id: number;
+  hideRadioButton?: boolean;
+}
+
+const CartItem: FC<CartItemProps> = props => {
   const {
-    item: {image, title, price},
+    item: { image, title, price },
     quantity,
     onAddPress,
     onMinusPress,
@@ -83,7 +93,7 @@ const CartItem = props => {
           backgroundColor: Colors.nearWhite,
         }}>
         <FastImage
-          source={{uri: image}}
+          source={{ uri: image }}
           style={{
             width: imageWidth,
             height: imageWidth,
@@ -166,18 +176,6 @@ const CartItem = props => {
       </View>
     </Card>
   );
-};
-
-CartItem.propTypes = {
-  style: PropTypes.any,
-  roundedCorner: PropTypes.number,
-  children: PropTypes.node,
-};
-
-CartItem.defaultProps = {
-  style: null,
-  roundedCorner: normalize(15),
-  children: null,
 };
 
 export default CartItem;
