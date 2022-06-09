@@ -57,6 +57,14 @@
       "selectors*": [
         "src/redux/selectors",
         "src/redux/selectors*"
+      ],
+      "reducers*": [
+        "src/redux/selectors",
+        "src/redux/selectors*"
+      ],
+      "sagas*": [
+        "src/redux/selectors",
+        "src/redux/selectors*"
       ]
     },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */

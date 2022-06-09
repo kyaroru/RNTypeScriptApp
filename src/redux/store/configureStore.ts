@@ -1,5 +1,5 @@
 import {createLogger} from 'redux-logger';
-import {createStore, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware, StoreEnhancer, AnyAction, Store} from 'redux';
 import {persistStore, persistCombineReducers} from 'redux-persist';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -7,8 +7,8 @@ import createSagaMiddleware from 'redux-saga';
 import reducers from 'reducers';
 import sagas from 'sagas';
 
-let middlewares;
-let store;
+let middlewares: StoreEnhancer<any, unknown> | undefined;
+let store: Store<any, AnyAction>;
 const sagaMiddleware = createSagaMiddleware();
 
 const config = {
@@ -21,10 +21,10 @@ const reducer = persistCombineReducers(config, reducers);
 
 /* global __DEV__ */
 if (__DEV__) {
-  const excludedActions = [];
+  const excludedActions: string | any[] = [];
   const logger = createLogger({
     collapsed: true,
-    predicate: (getState, action) => excludedActions.indexOf(action.type) < 0,
+    predicate: (_getState: any, action: { type: any; }) => excludedActions.indexOf(action.type) < 0,
   });
   middlewares = composeWithDevTools(applyMiddleware(sagaMiddleware, logger));
 } else {
@@ -33,7 +33,7 @@ if (__DEV__) {
 
 export const getStore = () => store;
 
-const configStore = onComplete => {
+const configStore = (onComplete: (() => any) | undefined) => {
   store = createStore(reducer, middlewares);
   // configureInterceptor(); // uncomment when API is integrated
   sagaMiddleware.run(sagas);
