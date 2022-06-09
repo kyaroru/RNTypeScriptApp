@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { View, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
+import { Colors } from 'themes';
 import { normalize } from 'utils/size';
 
 interface CardProps {
@@ -20,7 +21,7 @@ const Card: FC<CardProps> = props => {
   return (
     <ConditionalView
       onPress={onPress}
-      style={[{ borderRadius: roundedCorner }, style]}>
+      style={[{ backgroundColor: Colors.white, borderRadius: roundedCorner }, style]}>
       {children}
     </ConditionalView>
   );
