@@ -42,9 +42,9 @@ const FeaturedItems: FC<FeaturedItemsProps> = props => {
             <Space vertical={normalize(10)} />
             {type === 'sales' && (
               <View>
-                <Label text={i.price} color="accent" variant="bold" />
+                <Label text={i.price || '-'} color="accent" variant="bold" />
                 <Label
-                  text={i.originalPrice}
+                  text={i.originalPrice || '-'}
                   style={{ textDecorationLine: 'line-through' }}
                   size="s"
                   color="gray"
